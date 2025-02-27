@@ -1,9 +1,10 @@
-```
+
 # Cypress API Testing Framework
 
 A modular Cypress framework for testing an API with token-based authentication, employee CRUD operations, and error handling.
 
 ## Project Structure
+
 ```
 cypress/
 ├── e2e/
