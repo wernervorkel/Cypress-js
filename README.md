@@ -5,7 +5,6 @@ A modular Cypress framework for testing an API with token-based authentication, 
 
 ## Project Structure
 ```
-
 cypress/
 ├── e2e/
 │ ├── api/
@@ -22,7 +21,6 @@ cypress/
 │ ├── users.json # User credentials
 │ └── apiConfig.js # API endpoints and config
 └── cypress.config.js # Cypress configuration
-
 ```
 
 ## Prerequisites
