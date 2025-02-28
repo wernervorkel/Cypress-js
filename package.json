@@ -4,8 +4,10 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint cypress/**/*.js",
-    "format": "prettier --write cypress/**/*.js",
-    "lint:fix": "eslint --fix cypress/**/*.js && prettier --write cypress/**/*.js"
+    "format": "prettier --write \"cypress/**/*.{js,cy.js}\"",
+    "lint:fix": "eslint --fix cypress/**/*.js && prettier --write cypress/**/*.js",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run --spec 'cypress/e2e/api/**/*.cy.js'"
   },
   "keywords": [],
   "author": "",

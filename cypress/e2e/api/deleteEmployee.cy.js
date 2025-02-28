@@ -18,11 +18,11 @@ describe('Employee Update Tests', () => {
         email: randomEmail,
         phone: '+4434567890',
         address: {
-            street: '123',
-            town: 'Manchester',
-            postCode: 'M12 3T2'
-        }
-      }
+          street: '123',
+          town: 'Manchester',
+          postCode: 'M12 3T2',
+        },
+      },
     };
 
     cy.createEmployee('adminUser', employeeData).then((employeeResponse) => {
@@ -41,14 +41,14 @@ describe('Employee Update Tests', () => {
   });
 
   it('Validate that the user cannot delete an employee with an invalid token', () => {
-      //First, check if the token is invalid, and then inspect the payload for any issues.
-      cy.deleteEmployee('invalidUser', invalidId).then((response) => {
-        expect(response.status).to.eq(403);
-        expect(response.body).to.eq('Forbidden');
-      });
+    //First, check if the token is invalid, and then inspect the payload for any issues.
+    cy.deleteEmployee('invalidUser', invalidId).then((response) => {
+      expect(response.status).to.eq(403);
+      expect(response.body).to.eq('Forbidden');
+    });
   });
 
-  it('Validate that the user cannot delete an employee with a non-existent employee ID', () => { 
+  it('Validate that the user cannot delete an employee with a non-existent employee ID', () => {
     cy.deleteEmployee('adminUser', invalidId).then((response) => {
       expect(response.status).to.eq(404);
       expect(response.body.message).to.eq('Employee not found');

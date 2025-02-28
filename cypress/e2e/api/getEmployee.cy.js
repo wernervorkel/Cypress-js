@@ -17,9 +17,9 @@ describe('Employee Retrieval Tests', () => {
       contactInfo: {
         email: randomEmail,
         address: {
-            street: '123',
-        }
-      }
+          street: '123',
+        },
+      },
     };
 
     cy.createEmployee('adminUser', employeeData).then((employeeResponse) => {
@@ -30,7 +30,9 @@ describe('Employee Retrieval Tests', () => {
         expect(employee.contactInfo.email).to.eq(randomEmail);
         expect(employee.firstName).to.eq(employeeData.firstName);
         expect(employee.lastName).to.eq(employeeData.lastName);
-        expect(employee.contactInfo.address.street).to.eq(employeeData.contactInfo.address.street);
+        expect(employee.contactInfo.address.street).to.eq(
+          employeeData.contactInfo.address.street
+        );
         expect(employee.employeeId).to.eq(createdEmployeeId);
       });
     });

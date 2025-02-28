@@ -7,15 +7,15 @@ let responseStore;
 
 // this needs to be in a json file.
 const users = {
-  "adminUser": {
-    "username": "admin5",
-    "password": "securePassword"
+  adminUser: {
+    username: 'admin5',
+    password: 'securePassword',
   },
-  "invalidUser": {
-    "username": "admin2",
-    "password": "password"
-  }
-}
+  invalidUser: {
+    username: 'admin2',
+    password: 'password',
+  },
+};
 // Generate a token for the specified user
 Cypress.Commands.add('generateAuthToken', (userKey = 'adminUser') => {
   const user = users[userKey];
@@ -131,15 +131,17 @@ Cypress.Commands.add('deleteEmployee', (userKey, employeeId) => {
 //API: Update an employee
 Cypress.Commands.add('updateEmployee', (userKey, employeeId, employeeData) => {
   return cy
-    .apiRequestWithToken(userKey, 'PUT', `${apiConfig.endpoints.employees}/${employeeId}`, {
-      body: employeeData,
-    })
+    .apiRequestWithToken(
+      userKey,
+      'PUT',
+      `${apiConfig.endpoints.employees}/${employeeId}`,
+      {
+        body: employeeData,
+      }
+    )
     .then((response) => {
       if (response.status === 200) {
-        expect(response.status).to.eq(
-          200,
-          'Employee updated successfully'
-        );
+        expect(response.status).to.eq(200, 'Employee updated successfully');
         return response.body.user;
       } else {
         return response;
