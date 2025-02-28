@@ -1,10 +1,22 @@
-const users = require('../config/users.json');
+//const users = require('../config/users.json');
 const apiConfig = require('../config/apiConfig');
 const { apiRequest } = require('./apiUtils');
 
 let tokenStore = {};
 let responseStore;
 
+// this needs to be in a json file.
+const users = {
+  "adminUser": {
+    "username": "admin5",
+    "password": "securePassword"
+  },
+  "invalidUser": {
+    "username": "admin2",
+    "password": "password"
+  }
+}
+// Generate a token for the specified user
 Cypress.Commands.add('generateAuthToken', (userKey = 'adminUser') => {
   const user = users[userKey];
   if (!user) {
@@ -35,7 +47,7 @@ Cypress.Commands.add('generateAuthToken', (userKey = 'adminUser') => {
       }
     });
 });
-
+// Get the token for the specified user
 Cypress.Commands.add('getAuthToken', (userKey = 'adminUser') => {
   if (userKey === 'adminUser') {
     const token = tokenStore[userKey];
@@ -58,7 +70,7 @@ Cypress.Commands.add(
     });
   }
 );
-
+// API: Create an employee
 Cypress.Commands.add('createEmployee', (userKey, employeeData) => {
   return cy
     .apiRequestWithToken(userKey, 'POST', apiConfig.endpoints.employees, {
@@ -76,7 +88,7 @@ Cypress.Commands.add('createEmployee', (userKey, employeeData) => {
       }
     });
 });
-
+//API: Get an employee
 Cypress.Commands.add('getEmployee', (userKey, employeeId) => {
   return cy
     .apiRequestWithToken(
@@ -96,7 +108,7 @@ Cypress.Commands.add('getEmployee', (userKey, employeeId) => {
       }
     });
 });
-
+//API: Delete an employee
 Cypress.Commands.add('deleteEmployee', (userKey, employeeId) => {
   return cy
     .apiRequestWithToken(
@@ -116,7 +128,7 @@ Cypress.Commands.add('deleteEmployee', (userKey, employeeId) => {
       }
     });
 });
-
+//API: Update an employee
 Cypress.Commands.add('updateEmployee', (userKey, employeeId, employeeData) => {
   return cy
     .apiRequestWithToken(userKey, 'PUT', `${apiConfig.endpoints.employees}/${employeeId}`, {

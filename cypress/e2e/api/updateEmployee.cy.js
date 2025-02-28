@@ -1,13 +1,8 @@
 const apiConfig = require('../../config/apiConfig.js');
 
 describe('Employee Update Tests', () => {
-  before(() => {
-    cy.generateAuthToken('adminUser');
-    cy.generateAuthToken('invalidUser');
-  });
-
-  it('Verify that an employee has been successfully updated', () => {
-    const epochTime = Date.now();
+  const invalidId = 'non-existent-id';
+  const epochTime = Date.now();
     const randomEmail = `peter_${epochTime}@example.com`;
     const employeeData = {
       firstName: 'Peter',
@@ -23,6 +18,13 @@ describe('Employee Update Tests', () => {
         }
       }
     };
+  
+  before(() => {
+    cy.generateAuthToken('adminUser');
+    cy.generateAuthToken('invalidUser');
+  });
+
+  it('Verify that an employee has been successfully updated', () => {
     const newEmail = `spiderman_${epochTime}@example.com`;
     const updatedEmployeeData = {
         firstName: 'Spider',
@@ -38,11 +40,11 @@ describe('Employee Update Tests', () => {
           }
         }
       };
-
+    //create an employee
     cy.createEmployee('adminUser', employeeData).then((employeeResponse) => {
       const createdEmployeeId = employeeResponse.employeeId;
       cy.log(`Employee created with ID: ${createdEmployeeId}`);
-
+      //update the employee
       cy.updateEmployee('adminUser', createdEmployeeId, updatedEmployeeData).then((employee) => {
         expect(employee.contactInfo.email).to.eq(newEmail);
         expect(employee.firstName).to.eq(updatedEmployeeData.firstName);
@@ -68,24 +70,8 @@ describe('Employee Update Tests', () => {
     });
   });
 
-  // Skip this test, we need to fix the email, lastName and FirstName validation
+  // Skip this test, Fix validation for email, first name, and last name
   it.skip('Validate that the user cannot update an employee with a missing email', () => {
-    const epochTime = Date.now();
-    const randomEmail = `peter_${epochTime}@example.com`;
-    const employeeData = {
-      firstName: 'Peter',
-      lastName: 'Parker',
-      dateOfBirth: '2010-01-13',
-      contactInfo: {
-        email: randomEmail,
-        phone: '+4434567890',
-        address: {
-            street: '123',
-            town: 'Manchester',
-            postCode: 'M12 3T2'
-        }
-      }
-    };
     const newEmail = `spiderman_${epochTime}@example.com`;
     const updatedEmployeeData = {
         firstName: 'New',
@@ -107,28 +93,11 @@ describe('Employee Update Tests', () => {
   });
 
   it('Validate that the user cannot update an employee with an invalid token', () => {
-    const epochTime = Date.now();
-    const randomEmail = `peter_${epochTime}@example.com`;
-    const employeeData = {
-      firstName: 'Peter',
-      lastName: 'Parker',
-      dateOfBirth: '2010-01-13',
-      contactInfo: {
-        email: randomEmail,
-        phone: '+4434567890',
-        address: {
-            street: '123',
-            town: 'Manchester',
-            postCode: 'M12 3T2'
-        }
-      }
-    };
-
+    //First, check if the token is invalid, and then inspect the payload for any issues.
     cy.createEmployee('adminUser', employeeData).then((employeeResponse) => {
       const createdEmployeeId = employeeResponse.employeeId;
       cy.log(`Employee created with ID: ${createdEmployeeId}`);
-
-      cy.updateEmployee('invalidUser', createdEmployeeId, employeeData).then((response) => {
+      cy.updateEmployee('invalidUser', invalidId, {}).then((response) => {
         expect(response.status).to.eq(403);
         expect(response.body).to.eq('Forbidden');
       });
@@ -136,23 +105,7 @@ describe('Employee Update Tests', () => {
   });
 
   it('Validate that the user cannot update an employee with a non-existent employee ID', () => {
-    const epochTime = Date.now();
-    const randomEmail = `peter_${epochTime}@example.com`;
-    const employeeData = {
-      firstName: 'Peter',
-      lastName: 'Parker',
-      dateOfBirth: '2010-01-13',
-      contactInfo: {
-        email: randomEmail,
-        phone: '+4434567890',
-        address: {
-            street: '123',
-            town: 'Manchester',
-            postCode: 'M12 3T2'
-        }
-      }
-    };
-    cy.updateEmployee('adminUser', 'invalidEmployeeId', employeeData).then((response) => {
+    cy.updateEmployee('adminUser', invalidId, employeeData).then((response) => {
       expect(response.status).to.eq(404);
       expect(response.body.message).to.eq('Employee not found');
     });

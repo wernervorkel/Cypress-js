@@ -1,6 +1,7 @@
 const apiConfig = require('../../config/apiConfig.js');
 
 describe('Employee Retrieval Tests', () => {
+  const invalidId = 'non-existent-id';
   before(() => {
     cy.generateAuthToken('adminUser');
     cy.generateAuthToken('invalidUser');
@@ -36,7 +37,6 @@ describe('Employee Retrieval Tests', () => {
   });
 
   it('Validate that the user cannot retrieve an employee with an invalid employee ID', () => {
-    const invalidId = 'non-existent-id';
     cy.getEmployee('adminUser', invalidId).then((response) => {
       expect(response.status).to.eq(404, 'Expected error for invalid ID');
       expect(response.body.message).to.eq('Employee not found');
@@ -44,7 +44,6 @@ describe('Employee Retrieval Tests', () => {
   });
 
   it('Validate that the user cannot retrieve an employee with an invalid token', () => {
-    const invalidId = 'non-existent-id';
     cy.getEmployee('invalidUser', invalidId).then((response) => {
       expect(response.status).to.eq(403, 'Expected error for invalid token');
       expect(response.body).to.eq('Forbidden');

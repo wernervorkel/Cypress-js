@@ -1,5 +1,5 @@
 const apiConfig = require('../config/apiConfig');
-
+// Function to make API requests
 const apiRequest = (method, endpoint, options = {}) => {
   const { headers = {}, body, failOnStatusCode = false } = options;
   return cy.request({

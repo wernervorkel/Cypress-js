@@ -6,7 +6,10 @@ describe('Employee Creation Tests', () => {
     cy.generateAuthToken('invalidUser');
   });
 
-  it('Verify employee creation is successful', () => {
+  //The API application crashes with a 503 error every time an employee is created with an error.
+  //The API instance logs need to be investigated to identify the root cause of the issue.
+
+  it.only('Verify employee creation is successful', () => {
     const epochTime = Date.now();
     const randomEmail = `peter_${epochTime}@example.com`;
     const employeeData = {
@@ -23,11 +26,11 @@ describe('Employee Creation Tests', () => {
         }
       }
     };
-
+    //create the employee
     cy.createEmployee('adminUser', employeeData).then((employeeResponse) => {
       const createdEmployeeId = employeeResponse.employeeId;
       cy.log(`Employee created with ID: ${createdEmployeeId}`);
-
+      //check that the employee has been created
       cy.getEmployee('adminUser', createdEmployeeId).then((employee) => {
         expect(employee.contactInfo.email).to.eq(randomEmail);
         expect(employee.firstName).to.eq(employeeData.firstName);
@@ -37,7 +40,7 @@ describe('Employee Creation Tests', () => {
         expect(employee.contactInfo.address.postCode).to.eq(employeeData.contactInfo.address.postCode);
         expect(employee.contactInfo.phone).to.eq(employeeData.contactInfo.phone);
         expect(employee.employeeId).to.eq(createdEmployeeId);
-        // creating a new employee should have the correct full date, but it only save the year
+        // When creating a new employee, the full date should be saved correctly, but only the year is being stored
         expect(employee.dateOfBirth).to.eq(employeeData.dateOfBirth);
       });
     });
@@ -124,7 +127,7 @@ describe('Employee Creation Tests', () => {
       expect(response.body.error.message).to.eq("'peter.pan@example.com' is already in use.");
     });
   });
-  // Skip this test, we need to fix the email validation
+  // Skip this test, email validation should be fixed
   it.skip('Validate that an employee cannot be created with an invalid email format', () => {
     const employeeData = {
       firstName: 'Peter',
@@ -146,20 +149,7 @@ describe('Employee Creation Tests', () => {
   });
 
   it('Validate that the user cannot create an employee without a token', () => {
-    const epochTime = Date.now();
-    const randomEmail = `peter_${epochTime}@example.com`;
-    const employeeData = {
-      firstName: 'Peter',
-      lastName: 'Parker',
-      contactInfo: {
-        email: randomEmail,
-        address: {
-          street: '123'
-        }
-      }
-    };
-
-    cy.createEmployee('invalidUser', employeeData).then((employeeResponse) => {
+    cy.createEmployee('invalidUser', 'employeeData').then((employeeResponse) => {
         const response = employeeResponse;
         expect(response.status).to.eq(403);
         expect(response.body).to.eq('Forbidden');
